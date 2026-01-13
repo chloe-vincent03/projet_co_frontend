@@ -5,7 +5,7 @@ import { useUserStore } from "@/stores/user";
 
 
 // 🔌 connexion socket (UNE SEULE FOIS)
-const socket = io("http://localhost:3000", {
+const socket = io("https://vs2g6quq7gt.preview.hosting-ik.com", {
   withCredentials: true,
 });
 
