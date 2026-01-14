@@ -139,25 +139,28 @@ const imageError = ref(false);
         ←
       </button>
 
-      <!-- AVATAR -->
-      <div class="w-10 h-10 overflow-hidden border border-blue-plumepixel flex-shrink-0 flex items-center justify-center text-white font-bold uppercase"
-           :style="{ backgroundColor: 'var(--color-blue-plumepixel)' }">
-        <img v-if="receiver?.avatar" 
-             v-show="!imageError"
-             @error="imageError = true"
-             :src="receiver.avatar.startsWith('http') ? receiver.avatar : `${baseURL}${receiver.avatar}`" 
-             class="w-full h-full object-cover" />
-        <span v-if="!receiver?.avatar || imageError">{{ receiver?.username?.charAt(0) || '?' }}</span>
-      </div>
+      <!-- INFOS (Clickable) -->
+      <router-link :to="`/profil/${receiverId}`" class="flex items-center gap-3 hover:opacity-80 transition cursor-pointer">
+        <!-- AVATAR -->
+        <div class="w-10 h-10 overflow-hidden border border-blue-plumepixel flex-shrink-0 flex items-center justify-center text-white font-bold uppercase"
+             :style="{ backgroundColor: 'var(--color-blue-plumepixel)' }">
+          <img v-if="receiver?.avatar" 
+               v-show="!imageError"
+               @error="imageError = true"
+               :src="receiver.avatar.startsWith('http') ? receiver.avatar : `${baseURL}${receiver.avatar}`" 
+               class="w-full h-full object-cover" />
+          <span v-if="!receiver?.avatar || imageError">{{ receiver?.username?.charAt(0) || '?' }}</span>
+        </div>
 
-      <div>
-        <div class="font-semibold">
-          {{ receiver?.first_name }} {{ receiver?.last_name }}
+        <div>
+           <div class="font-semibold text-black">
+             {{ receiver?.first_name }} {{ receiver?.last_name }}
+           </div>
+           <div class="text-xs text-gray-500">
+             @{{ receiver?.username }}
+           </div>
         </div>
-        <div class="text-xs text-gray-500">
-          @{{ receiver?.username }}
-        </div>
-      </div>
+      </router-link>
     </header>
 
     <!-- MESSAGES -->
