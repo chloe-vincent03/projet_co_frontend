@@ -14,14 +14,15 @@ useHead({
 const store = useUserStore();
 const router = useRouter();
 
-const message = ref("");
+const user = computed(() => store.user);
 const allMedia = ref([]);
+const galerie = computed(() => allMedia.value);
+
+const message = ref("");
 const threads = ref([]);
 const activeTab = ref("galerie");
 const isGenerating = ref(false);
 
-const user = computed(() => store.user);
-const galerie = computed(() => allMedia.value);
 
 // 🔄 Chargement des données utilisateur
 watchEffect(async () => {

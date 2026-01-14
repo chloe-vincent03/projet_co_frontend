@@ -76,7 +76,15 @@ const send = () => {
 
 const formatTime = (date) => {
   if (!date) return "";
-  return new Date(date).toLocaleTimeString("fr-FR", {
+  
+  // 🕒 Correction UTC : si la date n'a pas de "Z" ni de fuseau, on ajoute "Z"
+  // pour dire au navigateur "C'est une date UTC, convertis-la en heure FR"
+  let dateObj = new Date(date);
+  if (typeof date === "string" && !date.endsWith("Z") && !/[+-]\d{2}:\d{2}$/.test(date)) {
+    dateObj = new Date(date + "Z");
+  }
+
+  return dateObj.toLocaleTimeString("fr-FR", {
     hour: "2-digit",
     minute: "2-digit",
     timeZone: "Europe/Paris",
@@ -101,6 +109,12 @@ const sendImage = async (file) => {
   );
 };
 
+const imageError = ref(false);
+
+watch(() => props.receiverId, () => {
+  imageError.value = false;
+});
+
 </script>
 
 <template>
@@ -112,6 +126,17 @@ const sendImage = async (file) => {
       <button @click="$emit('back')" class="lg:hidden text-blue-600 font-medium">
         ←
       </button>
+
+      <!-- AVATAR -->
+      <div class="w-10 h-10 overflow-hidden border border-blue-plumepixel flex-shrink-0 flex items-center justify-center text-white font-bold uppercase"
+           :style="{ backgroundColor: 'var(--color-blue-plumepixel)' }">
+        <img v-if="receiver?.avatar" 
+             v-show="!imageError"
+             @error="imageError = true"
+             :src="receiver.avatar.startsWith('http') ? receiver.avatar : `${baseURL}${receiver.avatar}`" 
+             class="w-full h-full object-cover" />
+        <span v-if="!receiver?.avatar || imageError">{{ receiver?.username?.charAt(0) || '?' }}</span>
+      </div>
 
       <div>
         <div class="font-semibold">
@@ -145,7 +170,7 @@ const sendImage = async (file) => {
    <img
   v-if="m.image_url"
   :src="m.image_url.startsWith('http') ? m.image_url : `${baseURL}${m.image_url}`"
-  class="max-w-full rounded-sm mb-1"
+  class="max-w-full mb-1"
 />
 
 
