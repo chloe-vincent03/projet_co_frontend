@@ -2,7 +2,7 @@
 import router from "@/router";
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import api from "@/api/axios";
+import api, { baseURL } from "@/api/axios";
 import MyButton from "@/components/MyButton.vue";
 import { useUserStore } from "@/stores/user";
 import MediaCard from "@/components/MediaCard.vue";
@@ -15,6 +15,11 @@ const user = ref(null);
 const allMedia = ref([]);
 const threads = ref([]);
 const activeTab = ref("galerie");
+const imageError = ref(false);
+
+watch(() => route.params.id, () => {
+  imageError.value = false;
+});
 
 // SEO
 useHead({
@@ -69,8 +74,14 @@ const deleteUser = async () => {
 
       <!-- PROFIL -->
       <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-        <div class="w-24 h-24 sm:w-36 sm:h-36 bg-gray-200 border border-blue-plumepixel rounded-lg overflow-hidden">
-          <img v-if="user?.avatar" :src="user.avatar" class="w-full h-full object-cover" />
+        <div class="w-24 h-24 sm:w-36 sm:h-36 border border-blue-plumepixel overflow-hidden flex items-center justify-center text-white font-bold uppercase text-3xl"
+             :style="{ backgroundColor: 'var(--color-blue-plumepixel)' }">
+          <img v-if="user?.avatar" 
+               v-show="!imageError"
+               @error="imageError = true"
+               :src="user.avatar.startsWith('http') ? user.avatar : `${baseURL}${user.avatar}`" 
+               class="w-full h-full object-cover" />
+          <span v-if="!user?.avatar || imageError">{{ user?.username?.charAt(0) || '?' }}</span>
         </div>
 
         <div class="text-center sm:text-left">

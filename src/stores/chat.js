@@ -36,6 +36,11 @@ export const useChatStore = defineStore("chat", {
 
         this.lastMessage = msg;
 
+        // 🛡️ Si le message n'a pas de date (socket), on met la date actuelle
+        if (!msg.created_at) {
+          msg.created_at = new Date().toISOString();
+        }
+
         if (
           msg.sender_id === this.receiverId ||
           msg.receiver_id === this.receiverId

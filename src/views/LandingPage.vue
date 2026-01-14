@@ -26,7 +26,7 @@ import IconLogo from "@/components/icons/IconLogo.vue";
 
             <!-- VISUEL -->
             <div class="order-2 lg:order-1 flex justify-center lg:block">
-                <img src="/public/img/img1_landingPage.png" class="w-full max-w-sm sm:max-w-md lg:max-w-none" />
+                <img src="/img/img1_landingPage.png" class="w-full max-w-sm sm:max-w-md lg:max-w-none" />
             </div>
 
             <!-- TEXTE -->
@@ -56,7 +56,7 @@ import IconLogo from "@/components/icons/IconLogo.vue";
 
             <!-- VISUEL -->
             <div class="flex justify-center lg:block">
-                <img src="/public/img/img2_landingpage.png" class="w-full max-w-sm sm:max-w-md lg:max-w-none" />
+                <img src="/img/img2_landingpage.png" class="w-full max-w-sm sm:max-w-md lg:max-w-none" />
             </div>
         </section>
 
@@ -65,7 +65,7 @@ import IconLogo from "@/components/icons/IconLogo.vue";
 
             <!-- VISUEL -->
             <div class="order-2 lg:order-1 flex justify-center lg:block">
-                <img src="/public/img/img3_landingPage.png" class="w-full max-w-sm sm:max-w-md lg:max-w-none" />
+                <img src="/img/img3_landingPage.png" class="w-full max-w-sm sm:max-w-md lg:max-w-none" />
             </div>
 
             <!-- TEXTE -->

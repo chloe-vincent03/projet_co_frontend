@@ -76,7 +76,15 @@ const send = () => {
 
 const formatTime = (date) => {
   if (!date) return "";
-  return new Date(date).toLocaleTimeString("fr-FR", {
+  
+  // 🕒 Correction UTC : si la date n'a pas de "Z" ni de fuseau, on ajoute "Z"
+  // pour dire au navigateur "C'est une date UTC, convertis-la en heure FR"
+  let dateObj = new Date(date);
+  if (typeof date === "string" && !date.endsWith("Z") && !/[+-]\d{2}:\d{2}$/.test(date)) {
+    dateObj = new Date(date + "Z");
+  }
+
+  return dateObj.toLocaleTimeString("fr-FR", {
     hour: "2-digit",
     minute: "2-digit",
     timeZone: "Europe/Paris",
@@ -88,19 +96,37 @@ const receiver = ref(null);
 
 const fileInput = ref(null);
 
+const isSendingImage = ref(false);
+
 const sendImage = async (file) => {
-  const formData = new FormData();
-  formData.append("image", file);
+  if (!file) return;
 
-  const res = await api.post("/messages/image", formData);
+  isSendingImage.value = true;
+  try {
+    const formData = new FormData();
+    formData.append("image", file);
 
-  chat.sendMessage(
-    userStore.user.user_id,
-    "",
-    res.data.image_url
-  );
+    const res = await api.post("/messages/image", formData);
+
+    chat.sendMessage(
+      userStore.user.user_id,
+      res.data.image_url,
+      res.data.image_url
+    );
+  } catch (e) {
+    console.error(e);
+  } finally {
+    isSendingImage.value = false;
+  }
 };
 
+// 🕵️‍♀️ Détecter si le message est une image
+const isImageUrl = (text) => {
+  if (!text) return false;
+  return /\.(jpg|jpeg|png|gif|webp)$/i.test(text);
+};
+
+const imageError = ref(false);
 </script>
 
 <template>
@@ -108,10 +134,21 @@ const sendImage = async (file) => {
 
     <!-- HEADER -->
    <header class="h-14 bg-white flex items-center px-4 gap-3 ">
-      <!-- bouton retour MOBILE -->
+      <!-- ... (header inchangé) ... -->
       <button @click="$emit('back')" class="lg:hidden text-blue-600 font-medium">
         ←
       </button>
+
+      <!-- AVATAR -->
+      <div class="w-10 h-10 overflow-hidden border border-blue-plumepixel flex-shrink-0 flex items-center justify-center text-white font-bold uppercase"
+           :style="{ backgroundColor: 'var(--color-blue-plumepixel)' }">
+        <img v-if="receiver?.avatar" 
+             v-show="!imageError"
+             @error="imageError = true"
+             :src="receiver.avatar.startsWith('http') ? receiver.avatar : `${baseURL}${receiver.avatar}`" 
+             class="w-full h-full object-cover" />
+        <span v-if="!receiver?.avatar || imageError">{{ receiver?.username?.charAt(0) || '?' }}</span>
+      </div>
 
       <div>
         <div class="font-semibold">
@@ -141,19 +178,17 @@ const sendImage = async (file) => {
         : 'bg-white text-gray-800 border-blue-600'
     ]"
   >
-    <!-- 🖼️ IMAGE -->
-           <img
-  v-if="m.image_url"
-  :src="`${baseURL}${m.image_url}`"
-  class="max-w-full rounded-sm mb-1"
-/>
-
-
     
+    <!-- 🖼️ IMAGE (soit via m.image_url, soit via m.content si c'est une URL) -->
+   <img
+    v-if="m.image_url || isImageUrl(m.content)"
+    :src="(m.image_url || m.content).startsWith('http') ? (m.image_url || m.content) : `${baseURL}${(m.image_url || m.content)}`"
+    class="max-w-full mb-1"
+  />
 
-    <!-- 💬 TEXTE -->
+    <!-- 💬 TEXTE (seulement si ce n'est PAS une image) -->
     <p
-      v-if="m.content"
+      v-if="m.content && !isImageUrl(m.content)"
       class="whitespace-pre-line break-words"
     >
       {{ m.content }}
@@ -177,8 +212,10 @@ const sendImage = async (file) => {
           @change="e => sendImage(e.target.files[0])" />
 
         <button @click="fileInput.click()" class="border border-blue-600 px-3 py-2 text-blue-600
-         hover:bg-blue-600 hover:text-white transition">
-          📷
+         hover:bg-blue-600 hover:text-white transition"
+         :disabled="isSendingImage">
+          <span v-if="isSendingImage" class="animate-spin inline-block">⏳</span>
+          <span v-else>📷</span>
         </button>
         <input v-model="text" @keyup.enter="send" placeholder="Écrire un message…" class="flex-1 bg-transparent border border-blue-600 px-4 py-2 outline-none
                  focus:ring-1 focus:ring-blue-600" />
