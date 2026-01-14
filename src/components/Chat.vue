@@ -96,25 +96,37 @@ const receiver = ref(null);
 
 const fileInput = ref(null);
 
+const isSendingImage = ref(false);
+
 const sendImage = async (file) => {
-  const formData = new FormData();
-  formData.append("image", file);
+  if (!file) return;
 
-  const res = await api.post("/messages/image", formData);
+  isSendingImage.value = true;
+  try {
+    const formData = new FormData();
+    formData.append("image", file);
 
-  chat.sendMessage(
-    userStore.user.user_id,
-    "",
-    res.data.image_url
-  );
+    const res = await api.post("/messages/image", formData);
+
+    chat.sendMessage(
+      userStore.user.user_id,
+      res.data.image_url,
+      res.data.image_url
+    );
+  } catch (e) {
+    console.error(e);
+  } finally {
+    isSendingImage.value = false;
+  }
+};
+
+// 🕵️‍♀️ Détecter si le message est une image
+const isImageUrl = (text) => {
+  if (!text) return false;
+  return /\.(jpg|jpeg|png|gif|webp)$/i.test(text);
 };
 
 const imageError = ref(false);
-
-watch(() => props.receiverId, () => {
-  imageError.value = false;
-});
-
 </script>
 
 <template>
@@ -122,7 +134,7 @@ watch(() => props.receiverId, () => {
 
     <!-- HEADER -->
    <header class="h-14 bg-white flex items-center px-4 gap-3 ">
-      <!-- bouton retour MOBILE -->
+      <!-- ... (header inchangé) ... -->
       <button @click="$emit('back')" class="lg:hidden text-blue-600 font-medium">
         ←
       </button>
@@ -166,19 +178,17 @@ watch(() => props.receiverId, () => {
         : 'bg-white text-gray-800 border-blue-600'
     ]"
   >
-    <!-- 🖼️ IMAGE -->
-   <img
-  v-if="m.image_url"
-  :src="m.image_url.startsWith('http') ? m.image_url : `${baseURL}${m.image_url}`"
-  class="max-w-full mb-1"
-/>
-
-
     
+    <!-- 🖼️ IMAGE (soit via m.image_url, soit via m.content si c'est une URL) -->
+   <img
+    v-if="m.image_url || isImageUrl(m.content)"
+    :src="(m.image_url || m.content).startsWith('http') ? (m.image_url || m.content) : `${baseURL}${(m.image_url || m.content)}`"
+    class="max-w-full mb-1"
+  />
 
-    <!-- 💬 TEXTE -->
+    <!-- 💬 TEXTE (seulement si ce n'est PAS une image) -->
     <p
-      v-if="m.content"
+      v-if="m.content && !isImageUrl(m.content)"
       class="whitespace-pre-line break-words"
     >
       {{ m.content }}
@@ -202,8 +212,10 @@ watch(() => props.receiverId, () => {
           @change="e => sendImage(e.target.files[0])" />
 
         <button @click="fileInput.click()" class="border border-blue-600 px-3 py-2 text-blue-600
-         hover:bg-blue-600 hover:text-white transition">
-          📷
+         hover:bg-blue-600 hover:text-white transition"
+         :disabled="isSendingImage">
+          <span v-if="isSendingImage" class="animate-spin inline-block">⏳</span>
+          <span v-else>📷</span>
         </button>
         <input v-model="text" @keyup.enter="send" placeholder="Écrire un message…" class="flex-1 bg-transparent border border-blue-600 px-4 py-2 outline-none
                  focus:ring-1 focus:ring-blue-600" />
