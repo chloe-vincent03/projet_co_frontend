@@ -3,7 +3,7 @@ import axios from "axios";
 import api from "@/api/axios";
 
 // 🔧 Configuration globale d'Axios (IMPORTANT)
-axios.defaults.baseURL = "https://vs2g6quq7gt.preview.hosting-ik.com";
+axios.defaults.baseURL = "http://localhost:3000";
 axios.defaults.withCredentials = true;
 
 export const useUserStore = defineStore("user", {
