@@ -18,6 +18,7 @@ const message = ref("");
 const allMedia = ref([]);
 const threads = ref([]);
 const activeTab = ref("galerie");
+const isGenerating = ref(false);
 
 const user = computed(() => store.user);
 const galerie = computed(() => allMedia.value);
@@ -48,6 +49,10 @@ function goToSettings() {
 }
 
 async function generateBook() {
+  if (isGenerating.value) return;
+  isGenerating.value = true;
+  message.value = "";
+
   try {
     if (!allMedia.value.length) {
       message.value = "Vous n'avez aucune œuvre à inclure dans le livre.";
@@ -69,8 +74,11 @@ async function generateBook() {
     a.download = `Livre_${user.value.username}.pdf`;
     a.click();
     window.URL.revokeObjectURL(url);
-  } catch {
+  } catch (err) {
+    console.error(err);
     message.value = "Impossible de générer le livre.";
+  } finally {
+    isGenerating.value = false;
   }
 }
 
@@ -208,8 +216,9 @@ watchEffect(() => {
       <!-- PDF -->
       <div class="mt-12 flex justify-center">
         <MyButton class="w-full sm:w-auto" :style="{ backgroundColor: 'var(--color-blue-plumepixel)' }"
-          @click="generateBook">
-          Télécharger mon portfolio (PDF)
+           @click="generateBook">
+           <span v-if="isGenerating">Génération en cours...</span>
+           <span v-else>Télécharger mon portfolio (PDF)</span>
         </MyButton>
       </div>
 
