@@ -3,7 +3,7 @@ import { ref, onMounted, computed } from 'vue';
 import GalleryItem from '../components/GalleryItems.vue';
 import { useUserStore } from "../stores/user";
 import { useRouter } from "vue-router";
-import axios from 'axios';
+import api from "@/api/axios";
 import GalleryItems from '../components/GalleryItems.vue';
 import MediaCard from '@/components/MediaCard.vue';
 import MyButton from '@/components/MyButton.vue';
@@ -26,8 +26,15 @@ const filterAuthor = ref('');
 
 async function loadGallery() {
   if (galleryData.value.length === 0) {
-    const res = await axios.get("/media"); // <-- maintenant le cookie est envoyé
-    galleryData.value = res.data;
+    const res = await api.get("/media");
+    console.log("Galerie data:", res.data);
+    // Vérification de sécurité : on s'assure que c'est bien un tableau d'objets
+    if (Array.isArray(res.data)) {
+        galleryData.value = res.data.filter(item => item && typeof item === 'object');
+    } else {
+        console.error("Format de réponse inattendu pour la galerie:", res.data);
+        galleryData.value = [];
+    }
 
   }
 }

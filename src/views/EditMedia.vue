@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import MyButton from "@/components/MyButton.vue";
+import api from "@/api/axios";
 
 const route = useRoute();
 const router = useRouter();
@@ -25,11 +26,8 @@ function handleFileUpload(event) {
 
 onMounted(async () => {
   try {
-    const res = await fetch(`http://localhost:3000/api/media/${route.params.id}`, {
-        credentials: 'include'
-    });
-    if (!res.ok) throw new Error("Erreur chargement");
-    const data = await res.json();
+    const res = await api.get(`/media/${route.params.id}`);
+    const data = res.data;
 
     title.value = data.title;
     description.value = data.description || '';
@@ -73,23 +71,14 @@ async function submit() {
   formData.append('allow_collaboration', allowCollaboration.value ? 1 : 0);
 
   try {
-    const res = await fetch(`http://localhost:3000/api/media/${route.params.id}`, {
-      method: 'PUT',
-      // Pas de Content-Type json, FormData gère le boundary
-      credentials: 'include',
-      body: formData
+    const res = await api.put(`/media/${route.params.id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" }
     });
 
-    if (res.ok) {
-        // alert("Modifications enregistrées !"); // On enlève l'alert pour fluidifier
-        router.push(`/oeuvre/${route.params.id}`);
-    } else {
-        const err = await res.json();
-        alert("Erreur : " + (err.error || "Erreur inconnue"));
-    }
-  } catch (error) {
-    console.error("Erreur réseau:", error);
-    alert("Erreur de connexion au serveur");
+    router.push(`/oeuvre/${route.params.id}`);
+  } catch (err) {
+    console.error("Erreur réseau:", err);
+    alert("Erreur : " + (err.response?.data?.error || "Erreur inconnue"));
   } finally {
     isSubmitting.value = false;
   }

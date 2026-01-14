@@ -2,9 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import api from "@/api/axios";
 
-// 🔧 Configuration globale d'Axios (IMPORTANT)
-axios.defaults.baseURL = "http://localhost:3000";
-axios.defaults.withCredentials = true;
+// 🔧 Configuration via api/axios.js
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -51,7 +49,7 @@ export const useUserStore = defineStore("user", {
     async logout() {
       try {
         await api.post("/auth/logout");
-      } catch (err) {}
+      } catch (err) { }
 
       this.user = null;
       this.isLoggedIn = false;
@@ -95,7 +93,7 @@ export const useUserStore = defineStore("user", {
     },
     async fetchUnreadNotifications() {
       if (!this.isLoggedIn) return;
-   
+
 
       const res = await api.get("/notification/unread-count");
       this.unreadNotifications = res.data.count;

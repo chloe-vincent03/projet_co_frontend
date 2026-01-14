@@ -122,10 +122,9 @@ async function saveChanges() {
     }
 
     const res = await api.put(
-      "http://localhost:3000/api/auth/update-profile",
+      "/auth/update-profile",
       formData,
       {
-        withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" }
       }
     );

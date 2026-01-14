@@ -2,7 +2,7 @@
 import { ref, watch, nextTick } from "vue";
 import { useUserStore } from "@/stores/user";
 import { useChatStore } from "@/stores/chat";
-import api from "@/api/axios";
+import api, { baseURL } from "@/api/axios";
 import MyButton from "./MyButton.vue";
 
 
@@ -144,7 +144,7 @@ const sendImage = async (file) => {
     <!-- 🖼️ IMAGE -->
            <img
   v-if="m.image_url"
-  :src="`http://localhost:3000${m.image_url}`"
+  :src="`${baseURL}${m.image_url}`"
   class="max-w-full rounded-sm mb-1"
 />
 
