@@ -142,9 +142,9 @@ const sendImage = async (file) => {
     ]"
   >
     <!-- 🖼️ IMAGE -->
-           <img
+   <img
   v-if="m.image_url"
-  :src="`${baseURL}${m.image_url}`"
+  :src="m.image_url.startsWith('http') ? m.image_url : `${baseURL}${m.image_url}`"
   class="max-w-full rounded-sm mb-1"
 />
 
