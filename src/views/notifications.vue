@@ -34,7 +34,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="px-4 pt-24 pb-16 max-w-3xl mx-auto">
+    <div class="px-4 pt-10 pb-16 max-w-3xl mx-auto">
         <h1 class="text-3xl font-[PlumePixel] text-blue-plumepixel mb-8">
             Notifications
         </h1>
@@ -49,7 +49,7 @@ onMounted(async () => {
             <li v-for="n in likes" :key="n.like_id"
                 class="flex items-center gap-4 p-4 border border-blue-plumepixel bg-white hover:shadow ">
                 <!-- Avatar -->
-                <img v-if="n.avatar" :src="n.avatar" class="w-10 h-10 rounded-full object-cover" />
+                <img v-if="n.avatar" :src="n.avatar" class="w-10 h-10  object-cover" />
 
                 <!-- Texte -->
                 <div class="flex-1 text-sm">

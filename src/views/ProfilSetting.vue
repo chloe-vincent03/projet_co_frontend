@@ -149,13 +149,13 @@ function backToProfile() {
 
 
 <template>
-  <div class="w-full min-h-screen bg-white pt-10 lg:pt-20">
+  <div class="w-full  bg-white pt-10 lg:pt-20">
     <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10 px-6">
       <!-- ---------------------- -->
       <!--        COLONNE GAUCHE        -->
       <!-- ---------------------- -->
       <div class="lg:col-span-2">
-        <h1 class="text-3xl font-[PlumePixel] mb-10 text-blue-plumepixel">Votre compte</h1>
+        <h1 class="lg:text-4xl font-[PlumePixel] mb-10 text-blue-plumepixel text-2xl">Votre compte</h1>
 
         <!-- Image de profil -->
         <div>
@@ -251,34 +251,29 @@ function backToProfile() {
         </div>
       </div>
 
-      <div class="flex flex-col items-end gap-3">
-        <MyButton
-          @click="resetForm"
-          icon="annuler"
-          :style="{
+    <!-- BARRE ACTIONS FIXE -->
+      <div class="sticky top-0 z-40 bg-white border-b border-blue-plumepixel">
+        <div class="max-w-6xl mx-auto flex justify-end gap-3 px-6 py-3 fixed">
+          <MyButton @click="resetForm" icon="annuler" variant="transparent" :style="{
             border: '2px solid var(--color-blue-plumepixel)',
             color: 'var(--color-blue-plumepixel)',
-          }"
-          variant="transparent"
-          >Annuler</MyButton
-        >
-        <!-- Bouton sauvegarder -->
-        <!-- Bouton sauvegarder -->
-        <MyButton
-          @click="saveChanges"
-          icon="valider"
-          :style="{ backgroundColor: 'var(--color-blue-plumepixel)' }"
-          :disabled="isLoading"
-          >
-          <div v-if="isLoading" class="flex items-center gap-2">
-            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span>Sauvegarde...</span>
-          </div>
-          <span v-else>Sauvegarder</span>
-        </MyButton>
+          }">
+            Annuler
+          </MyButton>
+
+          <MyButton @click="saveChanges" icon="valider" :disabled="isLoading"
+            :style="{ backgroundColor: 'var(--color-blue-plumepixel)' }">
+            <div v-if="isLoading" class="flex items-center gap-2">
+              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              <span>Sauvegarde...</span>
+            </div>
+            <span v-else>Sauvegarder</span>
+          </MyButton>
+        </div>
       </div>
       <div class="flex flex-col gap-4">
         <MyButton

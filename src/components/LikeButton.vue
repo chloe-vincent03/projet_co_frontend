@@ -17,6 +17,13 @@ const isLiked = ref(props.item.is_liked);
 const message = ref("");
 
 const toggleLike = async () => {
+  // Si l'utilisateur n'est pas connecté, afficher un message clair
+  if (!userStore.user) {
+    message.value = "Vous devez être connecté pour liker cette œuvre";
+    setTimeout(() => (message.value = ""), 2500);
+    return;
+  }
+
   try {
     if (isLiked.value) {
       await api.delete(`/media/${props.item.id}/like`);

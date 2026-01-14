@@ -30,10 +30,10 @@ async function loadGallery() {
     console.log("Galerie data:", res.data);
     // Vérification de sécurité : on s'assure que c'est bien un tableau d'objets
     if (Array.isArray(res.data)) {
-        galleryData.value = res.data.filter(item => item && typeof item === 'object');
+      galleryData.value = res.data.filter(item => item && typeof item === 'object');
     } else {
-        console.error("Format de réponse inattendu pour la galerie:", res.data);
-        galleryData.value = [];
+      console.error("Format de réponse inattendu pour la galerie:", res.data);
+      galleryData.value = [];
     }
 
   }
@@ -137,9 +137,10 @@ const filtered = computed(() => {
 
 
 
-    <router-link to="/ajouter">
-      <MyButton class="fixed bottom-20 right-6 " :style="{ backgroundColor: 'var(--color-blue-plumepixel)' }"
-        icon="plume">
+    <router-link to="/ajouter" v-if="store.user">
+      <MyButton size="large"
+        class="fixed top-100 right-0 transition-transform duration-300 hover:scale-110 hover:shadow-lg"
+        :style="{ backgroundColor: 'var(--color-blue-plumepixel)' }" icon="plume">
         Crée
       </MyButton>
     </router-link>

@@ -11,7 +11,7 @@ useHead({
         <div class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
             <!-- Header -->
             <header class="mb-8">
-                <h1 class="text-4xl font-bold text-blue-plumepixel font-[PlumePixel] sm:text-4xl">
+                <h1 class="text-4xl text-blue-plumepixel font-[PlumePixel] sm:text-4xl">
                     Conditions générales d’utilisation
                 </h1>
                 <p class="mt-2 text-sm text-blue-plumepixel">
@@ -141,6 +141,44 @@ useHead({
                         </p>
                         <p>
                             Toute reproduction ou exploitation sans autorisation écrite est strictement interdite.
+                        </p>
+                    </div>
+                </section>
+                <!-- 4 bis -->
+                <section>
+                    <h2 class="text-xl font-semibold text-blue-plumepixel">
+                        4 bis. Œuvres collaboratives et co-propriété
+                    </h2>
+
+                    <div class="mt-4 space-y-4 text-sm text-black">
+                        <p>
+                            La plateforme Plume &amp; Pixel permet aux utilisateurs de proposer certaines œuvres comme
+                            « ouvertes à la collaboration ».
+                        </p>
+
+                        <p>
+                            Lorsqu’un utilisateur contribue à une œuvre explicitement déclarée comme collaborative,
+                            il reconnaît que sa contribution constitue une création originale intégrée à l’œuvre
+                            existante.
+                        </p>
+
+                        <p>
+                            Toute contribution à une œuvre collaborative implique l’acceptation d’un principe de
+                            <strong>co-propriété de l’œuvre finale</strong> entre les différents contributeurs,
+                            proportionnellement à leur apport créatif, conformément aux dispositions du Code de la
+                            propriété intellectuelle.
+                        </p>
+
+                        <p>
+                            En l’absence d’accord spécifique entre les parties, aucune exploitation commerciale de
+                            l’œuvre
+                            collaborative ne pourra être réalisée sans l’accord de l’ensemble des co-auteurs.
+                        </p>
+
+                        <p>
+                            La plateforme Plume &amp; Pixel agit uniquement comme hébergeur des contenus et ne saurait
+                            être tenue
+                            responsable des accords ou désaccords entre co-auteurs.
                         </p>
                     </div>
                 </section>
