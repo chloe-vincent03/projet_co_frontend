@@ -54,17 +54,15 @@ async function generateBook() {
       return;
     }
 
-    const res = await fetch("http://localhost:3000/api/book/pdf", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+    const res = await api.post("/book/pdf", {
         title: `Livre de ${user.value.username}`,
         worksIds: allMedia.value.map(m => m.id),
         author: user.value.username,
-      }),
+      }, {
+        responseType: 'blob'
     });
 
-    const blob = await res.blob();
+    const blob = res.data;
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

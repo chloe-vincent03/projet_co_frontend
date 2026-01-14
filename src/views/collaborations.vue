@@ -3,7 +3,7 @@ import { ref, onMounted, computed, watch } from "vue";
 import MyButton from "@/components/MyButton.vue";
 import IconMusic from '@/components/icons/IconMusic.vue';
 import { useUserStore } from "@/stores/user";
-import axios from "axios";
+import api from "@/api/axios";
 import { useHead } from "@vueuse/head";
 
 useHead({
@@ -70,10 +70,8 @@ const filteredThreads = computed(() => {
 
 onMounted(async () => {
   try {
-    const res = await fetch('http://localhost:3000/api/media/threads', { credentials: 'include' });
-    if (res.ok) {
-      threads.value = await res.json();
-    }
+    const res = await api.get('/media/threads');
+    threads.value = res.data;
   } catch (e) {
     console.error(e);
   } finally {

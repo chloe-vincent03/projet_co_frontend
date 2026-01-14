@@ -3,6 +3,7 @@ import MyButton from '@/components/MyButton.vue';
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import api from "@/api/axios";
 
 const router = useRouter();
 const route = useRoute();
@@ -46,11 +47,8 @@ onMounted(async () => {
     // Si on répond à une œuvre, on récupère son titre pour l'affichage
     if (route.query.parent_id) {
         try {
-            const res = await fetch(`http://localhost:3000/api/media/${route.query.parent_id}`);
-            if (res.ok) {
-                const data = await res.json();
-                parentTitle.value = data.title;
-            }
+            const res = await api.get(`/media/${route.query.parent_id}`);
+            parentTitle.value = res.data.title;
         } catch (e) {
             console.error("Erreur récup parent", e);
         }
@@ -120,24 +118,17 @@ async function submit() {
   formData.append('allow_collaboration', allowCollaboration.value);
 
   try {
-    const res = await fetch('http://localhost:3000/api/media', {
-      method: 'POST',
-      credentials: 'include',
-      body: formData
+    const res = await api.post('/media', formData, {
+        headers: { "Content-Type": "multipart/form-data" }
     });
 
-    if (res.ok) {
-      const result = await res.json();
-      console.log("Success:", result);
-      router.push('/');
-    } else {
-      const err = await res.json();
-      console.error("Erreur serveur:", err);
-      alert("Erreur : " + (err.error || err.message || "Erreur inconnue"));
-    }
+    const result = res.data;
+    console.log("Success:", result);
+    router.push('/');
   } catch (error) {
-    console.error("Erreur réseau:", error);
-    alert("Erreur de connexion au serveur");
+    console.error("Erreur serveur:", error);
+    alert("Erreur : " + (error.response?.data?.error || error.message || "Erreur inconnue"));
+    // alert("Erreur de connexion au serveur"); // handled by catch block basically
   } finally {
     isSubmitting.value = false;
   }

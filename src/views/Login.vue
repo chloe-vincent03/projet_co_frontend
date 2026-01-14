@@ -81,10 +81,10 @@ const errorMessage = ref("");
 
 async function loginUser() {
   try {
-    const res = await api.post("http://localhost:3000/api/auth/login", {
+    const res = await api.post("/auth/login", {
       email: email.value,
       password: password.value,
-    }, { withCredentials: true });
+    });
 
     console.log("LOGIN OK :", res.data);
 

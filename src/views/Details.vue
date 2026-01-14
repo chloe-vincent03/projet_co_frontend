@@ -5,6 +5,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import LikeButton from "@/components/LikeButton.vue";
 import MediaCard from "@/components/MediaCard.vue";
+import api from "@/api/axios";
 import { useHead } from "@vueuse/head";
 
 
@@ -32,20 +33,8 @@ onMounted(async () => {
     }
 
   try {
-    const res = await fetch(
-      `http://localhost:3000/api/media/${route.params.id}`,
-      {
-        credentials: "include" // 🔥 OBLIGATOIRE
-      }
-    );
-
-
-    const txt = await res.text();
-    console.log("Réponse brute :", txt); 
-
-    if (!res.ok) throw new Error(`Erreur HTTP : ${res.status}`);
-
-    const data = JSON.parse(txt);
+    const res = await api.get(`/media/${route.params.id}`);
+    const data = res.data;
     item.value = {
       ...data,
       likes_count: Number(data.likes_count) || 0,
@@ -62,21 +51,12 @@ async function deleteItem() {
   if (!confirm("Voulez-vous vraiment supprimer cette œuvre ?")) return;
 
   try {
-    const res = await fetch(`http://localhost:3000/api/media/${item.value.id}`, {
-      method: "DELETE",
-      credentials: "include" // Important pour l'auth
-    });
+    const res = await api.delete(`/media/${item.value.id}`);
 
-    if (res.ok) {
-        alert("Œuvre supprimée !");
-        router.push('/');
-    } else {
-        const err = await res.json();
-        alert("Erreur : " + (err.error || "Impossible de supprimer"));
-    }
+    router.push('/');
   } catch (err) {
     console.error(err);
-    alert("Erreur réseau");
+    alert("Erreur : " + (err.response?.data?.error || "Impossible de supprimer"));
   }
 }
 
@@ -98,24 +78,14 @@ const goToProfile = (profileUserId) => {
 async function updateStatus() {
   if (!item.value) return;
   try {
-    const res = await fetch(`http://localhost:3000/api/media/${item.value.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({
-        ...item.value, // On renvoie tout l'objet pour ne pas casser les autres champs (car PUT écrase souvent)
+    const res = await api.put(`/media/${item.value.id}`, {
+        ...item.value, 
         status: item.value.status 
-      })
     });
-    if (res.ok) {
-        // Succès
-        console.log("Status mis à jour");
-    } else {
-        alert("Erreur lors de la mise à jour du statut");
-    }
+    console.log("Status mis à jour");
   } catch (e) {
     console.error(e);
-    alert("Erreur réseau");
+    alert("Erreur lors de la mise à jour du statut");
   }
 }
 </script>
