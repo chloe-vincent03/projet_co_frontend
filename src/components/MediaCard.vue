@@ -53,7 +53,7 @@ const previewText = (text, limit = 200) => {
                     </svg>
                 </div>
 
-                <div class="p-3 text-xl font-[PlumePixel] text-black">
+                <div class="p-3 lg:text-xl text-lg font-[PlumePixel] text-black">
                     {{ item.title }}
                 </div>
             </div>
@@ -62,7 +62,7 @@ const previewText = (text, limit = 200) => {
             <div v-else-if="item.type === 'audio'"
                 class="flex flex-col items-center justify-center py-10 px-4 text-center">
                 <IconMusic class="text-6xl text-blue-plumepixel" />
-                <div class="mt-4 font-[PlumePixel]">
+                <div class="mt-4 font-[PlumePixel] lg:text-xl text-lg">
                     {{ item.title }}
                 </div>
             </div>

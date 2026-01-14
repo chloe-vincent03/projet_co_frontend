@@ -144,12 +144,12 @@ async function registerUser() {
 
         <!-- Privacy Toggle -->
         <div class="border-t pt-6 mt-6">
-          <h3 class="font-bold text-blue-plumepixel mb-4">Confidentialité du compte</h3>
+                    <h3 class="font-bold text-blue-plumepixel mb-4">Confidentialité du compte</h3>
           <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
             <div class="flex-1">
-              <label class="font-medium text-gray-700">Compte Privé</label>
+              <label class="font-medium text-gray-700">{{ isPrivate ? 'Compte Privé' : 'Compte Public' }}</label>
               <p class="text-sm text-gray-500 mt-1">
-                Toutes vos œuvres seront automatiquement privées
+                {{ isPrivate ? 'Toutes vos œuvres seront automatiquement privées' : 'Toutes vos œuvres seront automatiquement publiques' }}
               </p>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">

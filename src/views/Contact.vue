@@ -2,7 +2,7 @@
     <main class=" flex items-center justify-center px-6 py-12">
         <div class="w-full max-w-2xl bg-white p-8 shadow-sm border border-blue-plumepixel">
             <!-- Title -->
-            <h1 class="text-4xl font-bold text-blue-plumepixel font-[PlumePixel] text-center">
+            <h1 class="text-4xl text-blue-plumepixel font-[PlumePixel] text-center">
                 Nous contacter
             </h1>
 
